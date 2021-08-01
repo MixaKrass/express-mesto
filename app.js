@@ -24,12 +24,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
-app.use(auth);
-
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth);
+
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
