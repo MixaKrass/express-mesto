@@ -14,6 +14,15 @@ const getUsers = (req, res) => {
     });
 };
 
+const getProfile = (req, res) => {
+  User.findById(req.user._id)
+    .orFail(new Error('NotFound'))
+    .then((users) => res.status(200).send(users))
+    .catch (() => {
+      res.status(500).send({ message: 'Ошибка по умолчанию.' });
+    });
+};
+
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .orFail(new Error('NotFound'))
@@ -99,4 +108,4 @@ const login = (req, res) => {
     });
 };
 
-module.exports = { getUsers, getUserById, createUser, updateProfile, updateAvatar, login };
+module.exports = { getUsers, getUserById, createUser, updateProfile, updateAvatar, login, getProfile };
