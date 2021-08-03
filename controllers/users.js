@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const User = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -23,7 +24,8 @@ const getUserById = (req, res) => {
         res.status(400).send({ message: 'Переданы некорректные данные.' });
       } else if ((err.message === 'NotFound')) {
         res.status(404).send({ message: 'Пользователь по указанному _id не найден.' });
-      } else {res.status(500).send({ message: 'Ошибка по умолчанию.' });
+      } else {
+        res.status(500).send({ message: 'Ошибка по умолчанию.' });
       }
     });
 };
@@ -51,6 +53,8 @@ const updateProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Ошибка валидации' });
       } else if (err.message === 'NotFound') {
         res.status(404).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
@@ -69,6 +73,8 @@ const updateAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Ошибка валидации' });
       } else if (err.message === 'NotFound') {
         res.status(404).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
@@ -77,4 +83,6 @@ const updateAvatar = (req, res) => {
     });
 };
 
-module.exports = { getUsers, getUserById, createUser, updateProfile, updateAvatar };
+module.exports = {
+  getUsers, getUserById, createUser, updateProfile, updateAvatar,
+};
