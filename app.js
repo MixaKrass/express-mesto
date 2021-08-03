@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
+// const { login, createUser } = require('./controllers/users');
+// const auth = require('./middlewares/auth');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -16,15 +16,27 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+// app.post('/signin', login);
+// app.post('/signup', createUser);
 
-app.use(auth);
+// app.use(auth);
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '6102985e3d303929009bad65', // вставьте сюда _id созданного в предыдущем пункте пользователя
+  };
+
+  next();
+});
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
+app.use('*', require('./routes/NotFound'));
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
+
+// В этой версии присутствуют элементы из ПР 14,
+// так как начал её делать, чтобы не терять время.

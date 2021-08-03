@@ -1,25 +1,26 @@
 const mongoose = require('mongoose');
+// eslint-disable-next-line no-unused-vars
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: "Жак-Ив Кусто",
+    default: 'Жак-Ив Кусто',
     minlength: 2,
     maxlength: 30,
   },
 
   about: {
     type: String,
-    default: "Исследователь",
+    default: 'Исследователь',
     minlength: 2,
     maxlength: 30,
   },
 
   avatar: {
     type: String,
-    default: "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png"
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
 
   email: {
@@ -27,6 +28,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
     validate: {
+      // eslint-disable-next-line no-undef
       validator: (v) => isEmail(v),
       message: 'Неправильный формат почты',
     },
