@@ -2,8 +2,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-// const { login, createUser } = require('./controllers/users');
-// const auth = require('./middlewares/auth');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -17,11 +15,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb',
     useCreateIndex: true,
     useFindAndModify: false,
   });
-
-// app.post('/signin', login);
-// app.post('/signup', createUser);
-
-// app.use(auth);
 
 app.use((req, res, next) => {
   req.user = {
@@ -39,6 +32,3 @@ app.listen(PORT, () => {
 // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
-
-// В этой версии присутствуют элементы из ПР 14,
-// так как начал её делать, чтобы не терять время.

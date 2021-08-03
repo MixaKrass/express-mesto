@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 /* eslint-disable linebreak-style */
-=======
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
->>>>>>> 43116ed5c1a6c9d805419269014fd4f1dab033f6
 const User = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -14,17 +9,6 @@ const getUsers = (req, res) => {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
         return;
       }
-      res.status(500).send({ message: 'Ошибка по умолчанию.' });
-    });
-};
-
-const getProfile = (req, res) => {
-  User.findById(req.user._id)
-    .orFail(new Error('NotFound'))
-    .then((users) => {
-      res.status(200).send(users);
-    })
-    .catch(() => {
       res.status(500).send({ message: 'Ошибка по умолчанию.' });
     });
 };
@@ -47,16 +31,8 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => {
-      User.create({
-        email: req.body.email,
-        password: hash,
-        name: req.body.name,
-        about: req.body.about,
-        avatar: req.body.avatar,
-      });
-    })
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -107,25 +83,6 @@ const updateAvatar = (req, res) => {
     });
 };
 
-<<<<<<< HEAD
 module.exports = {
   getUsers, getUserById, createUser, updateProfile, updateAvatar,
-=======
-const login = (req, res) => {
-  const { email, password } = req.body;
-
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
-      console.log({ token });
-      res.send({ token });
-    })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
-};
-
-module.exports = {
-  getUsers, getUserById, createUser, updateProfile, updateAvatar, login, getProfile,
->>>>>>> 43116ed5c1a6c9d805419269014fd4f1dab033f6
 };

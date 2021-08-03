@@ -31,17 +31,10 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findById(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId)
     .orFail(new Error('NotFound'))
     .then((card) => {
-      if (card.owner.toString() !== req.user._id) {
-        res.status(401).send({ message: 'У тебя нет прав на удаление этой карточки' });
-      } else {
-        Card.findByIdAndDelete(req.params.cardId)
-          .then(() => {
-            res.status(200).send(card);
-          });
-      }
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
