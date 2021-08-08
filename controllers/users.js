@@ -29,11 +29,6 @@ const getUserById = (req, res, next) => {
     .then((user) => {
       res.status(200).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new BadReqError('Некорректный id');
-      }
-    })
     .catch(next);
 };
 

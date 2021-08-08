@@ -10,15 +10,15 @@ router.get('/users/me', getProfile);
 
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().required().hex().min(24)
+    userId: Joi.string().required().hex().min(24)
       .max(24),
   }),
 }), getUserById);
 
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
   }),
 }), updateProfile);
 
