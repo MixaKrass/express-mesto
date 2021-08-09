@@ -29,7 +29,7 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
-      throw new NotFoundError('Некорректный id');
+      throw new Error('IncorrectId');
     })
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
@@ -39,6 +39,13 @@ const deleteCard = (req, res, next) => {
           .then(() => {
             res.status(200).send(card);
           });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new BadReqError('Карточка по указанному id не найдена');
+      } else if (err.message === 'IncorrectId') {
+        throw new NotFoundError('Карточка по указанному id не найдена');
       }
     })
     .catch(next);
@@ -51,10 +58,17 @@ const likeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(() => {
-      throw new NotFoundError('Некорректный id');
+      throw new Error('IncorrectId');
     })
     .then((card) => {
       res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new BadReqError('Карточка по указанному id не найдена');
+      } else if (err.message === 'IncorrectId') {
+        throw new NotFoundError('Карточка по указанному id не найдена');
+      }
     })
     .catch(next);
 };
@@ -66,10 +80,17 @@ const dislikeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(() => {
-      throw new NotFoundError('Некорректный id');
+      throw new Error('IncorrectId');
     })
     .then((card) => {
       res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new BadReqError('Карточка по указанному id не найдена');
+      } else if (err.message === 'IncorrectId') {
+        throw new NotFoundError('Карточка по указанному id не найдена');
+      }
     })
     .catch(next);
 };

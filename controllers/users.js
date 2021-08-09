@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadReqError = require('../errors/bad-req-err');
 const NotFoundError = require('../errors/not-found-err');
+const NotAuthError = require('../errors/not-auth-err');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -117,13 +118,13 @@ const login = (req, res, next) => {
   } else {
     User.findOne({ email }).select('+password')
       .orFail(() => {
-        throw new BadReqError('Некорректный email');
+        throw new NotAuthError('указан неправильный email или пароль');
       })
       .then((user) => {
         bcrypt.compare(password, user.password)
           .then((matched) => {
             if (!matched) {
-              throw new BadReqError('указан неправильный email или пароль');
+              throw new NotAuthError('указан неправильный email или пароль');
             } else {
               const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
               res.send({ token });
