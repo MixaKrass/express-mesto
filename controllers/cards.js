@@ -32,13 +32,12 @@ const deleteCard = (req, res, next) => {
       throw new Error('IncorrectId');
     })
     .then((card) => {
-      if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError('У тебя нет прав на удаление этой карточки');
+      if (card.owner._id.toString() === req.user._id) {
+        Card.deleteOne(card).then(() => {
+          res.status(200).send({ message: 'карточка удалена' });
+        });
       } else {
-        Card.findByIdAndDelete(req.params.cardId)
-          .then(() => {
-            res.status(200).send(card);
-          });
+        throw new ForbiddenError('У тебя нет прав на удаление этой карточки');
       }
     })
     .catch((err) => {
@@ -46,9 +45,8 @@ const deleteCard = (req, res, next) => {
         throw new BadReqError('Карточка по указанному id не найдена');
       } else if (err.message === 'IncorrectId') {
         throw new NotFoundError('Карточка по указанному id не найдена');
-      }
-    })
-    .catch(next);
+      } else next(err);
+    });
 };
 
 const likeCard = (req, res, next) => {
